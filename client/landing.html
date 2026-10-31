@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spayway — Community Commerce, Skill Hub &amp; Member Workspace</title>
+  <meta name="description" content="Spayway connects members across digital skill modules, verified community trade, and a unified personal workspace." />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles/spayway.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <img src="/assets/logo-mark.svg" alt="Spayway logo" />
+        <span>Spayway</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#pillars">Workspace</a>
+        <a href="#discover">How It Works</a>
+        <a href="#academy">Modules</a>
+        <a href="#faq">FAQ</a>
+        <div class="nav-menu-actions">
+          <a href="/auth?mode=register" class="btn btn-dark btn-block">Register</a>
+          <a href="/auth?mode=signin" class="btn btn-ghost btn-block">Sign In</a>
+        </div>
+      </nav>
+      <div class="nav-actions">
+        <a href="/auth?mode=signin" class="btn btn-ghost nav-cta">Sign In</a>
+        <a href="/auth?mode=register" class="btn btn-dark nav-cta">Register</a>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+            <line class="mb-l1" x1="4" y1="7" x2="20" y2="7"></line>
+            <line class="mb-l2" x1="4" y1="12" x2="20" y2="12"></line>
+            <line class="mb-l3" x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Balanced 2-Column Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-left">
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span>SPAYWAY UNIFIED WORKSPACE</span>
+          </div>
+          <h1>Connect With Purpose. <br />Master Practical Skills. <br /><span>Grow Together.</span></h1>
+          <p class="lead">
+            A fast, unified workspace for community commerce, curated skill tasks, team milestones, and personal asset management across global chapters.
+          </p>
+          <div class="hero-cta">
+            <a href="/auth?mode=register" class="btn btn-primary btn-lg">Register Account →</a>
+            <a href="/auth?mode=signin" class="btn btn-ghost btn-lg">Sign In</a>
+          </div>
+          <div class="hero-metrics">
+            <div class="hero-metric">
+              <strong>4 Core Hubs</strong>
+              <span>Personal, Discover, Team &amp; Creator</span>
+            </div>
+            <div class="hero-metric">
+              <strong>Phone or Email</strong>
+              <span>Fast, Secure Registration</span>
+            </div>
+            <div class="hero-metric">
+              <strong>24/7 Access</strong>
+              <span>Desktop &amp; Mobile Workspace</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-arch-grid">
+          <div class="arch-card dark">
+            <div>
+              <div class="arch-num">01 · PERSONAL CENTER</div>
+              <h3>Multi-Wallet Hub</h3>
+              <p>Manage Flexible Wallet, Points Wallet, and Savings Jar with instant Recharge, Flash Exchange, and P2P Transfer.</p>
+            </div>
+            <a href="/auth?mode=signin" class="btn btn-primary" style="align-self:flex-start;">Open Center →</a>
+          </div>
+          <div class="arch-card">
+            <div>
+              <div class="arch-num">02 · DISCOVER FEED</div>
+              <h3>Verified Dispatches</h3>
+              <p>Explore community insights across Economy, Technology, Finance, and Society with live Like and Comment tracking.</p>
+            </div>
+            <a href="#pillars" class="btn btn-ghost" style="align-self:flex-start;">Preview Feed</a>
+          </div>
+          <div class="arch-card">
+            <div>
+              <div class="arch-num">03 · TEAM &amp; MILESTONES</div>
+              <h3>Chapter Coordination</h3>
+              <p>Track your 7-stage milestone progression, connect with your upline mentor, and organize regional chapters.</p>
+            </div>
+            <a href="#academy" class="btn btn-ghost" style="align-self:flex-start;">View Modules</a>
+          </div>
+          <div class="arch-card">
+            <div>
+              <div class="arch-num">04 · CREATOR &amp; SUPPORT</div>
+              <h3>Publish &amp; Assist</h3>
+              <p>Publish original field articles in the Creator Studio and access 24/7 regional help via Support Center.</p>
+            </div>
+            <a href="/auth?mode=register" class="btn btn-ghost" style="align-self:flex-start;">Join Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Workspace Module Explorer -->
+    <section class="section section-alt" id="pillars">
+      <div class="container">
+        <div class="section-split-head">
+          <div>
+            <span class="tag">Interactive Workspace</span>
+            <h2>Explore Your Spayway Modules</h2>
+          </div>
+          <p>Select any module tab below to inspect the exact tools available inside your member workspace.</p>
+        </div>
+
+        <div class="explorer-tabs" id="explorerTabs">
+          <button type="button" class="explorer-tab active" data-mod="personal">01 · Personal Center</button>
+          <button type="button" class="explorer-tab" data-mod="discover">02 · Discover &amp; Creator</button>
+          <button type="button" class="explorer-tab" data-mod="team">03 · Team &amp; Milestones</button>
+          <button type="button" class="explorer-tab" data-mod="offline">04 · Offline &amp; Support</button>
+        </div>
+
+        <div class="explorer-stage">
+          <div class="explorer-info">
+            <span class="tag" id="modTag" style="margin-bottom:10px;">MODULE 01 · PERSONAL CENTER</span>
+            <h3 id="modTitle">Personal Center &amp; Multi-Wallet Hub</h3>
+            <p id="modDesc">
+              Manage your Flexible Wallet, Points Wallet, and Savings Jar from a unified workspace. Execute instant Recharge, Withdraw, Flash Exchange, and P2P Member Transfers with zero pre-filled clutter.
+            </p>
+            <ul class="explorer-points" id="modPoints">
+              <li>Sub-tabs for Assets, Account, Membership, Tasks, Order, Download &amp; Refer</li>
+              <li>Instant Recharge, Withdraw, Flash Exchange, and P2P Member Transfer</li>
+              <li>Real-time Flexible Asset List (USDC, USDT, SPW) and Income Composition</li>
+            </ul>
+            <div class="explorer-cta">
+              <a href="/auth?mode=register" class="btn btn-primary">Register to Access</a>
+              <a href="/auth?mode=signin" class="btn btn-ghost">Sign In</a>
+            </div>
+          </div>
+
+          <div class="explorer-preview" id="modPreview">
+            <div class="mock-bar">
+              <span class="mock-pill active">Assets</span>
+              <span class="mock-pill">Account</span>
+              <span class="mock-pill">Membership</span>
+              <span class="mock-pill">Tasks</span>
+              <span class="mock-pill">Order</span>
+            </div>
+            <div class="mock-dark-card">
+              <div class="mock-dark-top">
+                <span>Total Assets</span>
+                <strong>0 USDT</strong>
+              </div>
+              <div class="mock-dark-sub">
+                <span>Points Wallet: 0 USDT</span>
+                <span>Flexible Wallet: 0 USDT</span>
+                <span>Savings Jar: 0 USDT</span>
+              </div>
+            </div>
+            <div class="mock-actions">
+              <span>Recharge</span>
+              <span>Withdraw</span>
+              <span>Flash Exchange</span>
+              <span>Transfer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="discover">
+      <div class="container">
+        <div class="section-split-head">
+          <div>
+            <span class="tag">How It Works</span>
+            <h2>Get Started in Three Steps</h2>
+          </div>
+          <p>Simple onboarding with phone number or email verification, captcha security, and instant workspace access.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="step-badge">01</div>
+            <h3>Register or Sign In</h3>
+            <p>Create your account using your phone number (with full international country codes) or email address, verified by security code and invitation code.</p>
+          </article>
+          <article class="card">
+            <div class="step-badge">02</div>
+            <h3>Explore Discover &amp; Tasks</h3>
+            <p>Browse community articles, complete daily skill tasks, publish in Creator Studio, and track your likes and comments in real time.</p>
+          </article>
+          <article class="card">
+            <div class="step-badge">03</div>
+            <h3>Manage Assets &amp; Team</h3>
+            <p>Use Personal Center for Recharge, Withdraw, Flash Exchange, Savings Jar, and P2P transfers with your regional chapter.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Modules -->
+    <section class="section section-alt" id="academy">
+      <div class="container">
+        <div class="section-split-head">
+          <div>
+            <span class="tag">Workspace Architecture</span>
+            <h2>Built for Speed on Desktop &amp; Mobile</h2>
+          </div>
+          <p>Every tool is organized into a clean 3-column desktop workspace and a one-thumb mobile bottom navigation bar.</p>
+        </div>
+        <div class="grid-4">
+          <article class="card">
+            <h3>Home &amp; Quick Actions</h3>
+            <p>One-tap access to Top Up, Subscription, Invite, Task Center, and Help alongside trending community updates.</p>
+          </article>
+          <article class="card">
+            <h3>Personal Center</h3>
+            <p>Unified view of Total Assets, Points Wallet, Flexible Wallet, Savings Jar, and 7-stage Milestone progress.</p>
+          </article>
+          <article class="card">
+            <h3>Team &amp; Upline</h3>
+            <p>Coordinate with your direct chapter, view your Upline sponsor details, and share your invitation code.</p>
+          </article>
+          <article class="card">
+            <h3>Creator &amp; Support</h3>
+            <p>Publish verified community dispatches and connect with 24/7 Support Center and Customer Support.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Balanced Split FAQ -->
+    <section class="section" id="faq">
+      <div class="container faq-split">
+        <div>
+          <span class="tag">FAQ</span>
+          <h2 style="font-size:2rem;font-weight:800;letter-spacing:-0.03em;margin:8px 0 12px;">Common Questions</h2>
+          <p style="color:var(--muted);font-size:0.95rem;margin-bottom:20px;">
+            Everything you need to know about creating your Spayway account and navigating the member workspace.
+          </p>
+          <a href="/auth?mode=register" class="btn btn-dark">Create Account →</a>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>How do I access the Spayway workspace?</summary>
+            <p>Click Sign In or Register in the top navigation bar to open the dedicated authentication portal, where you can sign in or register with your phone number or email.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Can I register with my international phone number or email?</summary>
+            <p>Yes. The registration page supports both Phone Number (with all global country dialing codes) and Email Address, along with password confirmation, graphic verification code, and invitation code.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Does the workspace work on mobile phones?</summary>
+            <p>Yes. Spayway includes a dedicated mobile layout with a slide-over drawer and a 5-tab bottom navigation bar for Home, Discover, Stake, Team, and Personal Center.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Balanced Split CTA Banner -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="cta-banner">
+          <div class="cta-banner-copy">
+            <h2>Ready to enter your Spayway workspace?</h2>
+            <p>Sign in to your account or register a new member profile in seconds.</p>
+          </div>
+          <div class="cta-banner-actions">
+            <a href="/auth?mode=register" class="btn btn-primary btn-lg">Register Account</a>
+            <a href="/auth?mode=signin" class="btn btn-ghost btn-lg">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="brand">
+        <img src="/assets/logo-mark.svg" alt="Spayway" />
+        <span>Spayway</span>
+      </div>
+      <div>© 2026 Spayway Community Network. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="/scripts/landing.js"></script>
+</body>
+</html>

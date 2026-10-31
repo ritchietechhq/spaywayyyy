@@ -1,0 +1,12 @@
+{
+  "name": "spayway-client",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server.ts",
+    "start": "node server.ts",
+    "dev:next": "next dev --port 3000",
+    "build:next": "next build"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "spayway-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.ts",
+    "start": "node src/index.ts",
+    "test": "node --test tests/engine.test.ts"
+  }
+}

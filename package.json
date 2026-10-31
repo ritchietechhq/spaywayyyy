@@ -1,0 +1,12 @@
+{
+  "name": "spayway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Spayway: learn, sell and grow together. Mobile-first community commerce for West Africa.",
+  "scripts": {
+    "dev": "node --watch client/server.ts",
+    "dev:server": "node --watch server/src/index.ts",
+    "dev:client": "node --watch client/server.ts",
+    "test": "node --test server/tests/engine.test.ts server/tests/landing.test.ts server/tests/rates.test.ts"
+  }
+}

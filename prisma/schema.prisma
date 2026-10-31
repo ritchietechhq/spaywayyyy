@@ -1,0 +1,454 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  FINANCE_ADMIN
+  CONTENT_MANAGER
+  MEMBER
+}
+
+enum CurrencyCode {
+  USD
+  NGN
+  GHS
+  XOF
+  GBP
+  EUR
+  USDT
+  USDC
+}
+
+enum ContractPhaseStatus {
+  PHASE_1_CAPITAL_RECOVERY
+  PHASE_2_DAILY_PROFIT_60
+  POST_60_ROYALTY_90
+  COMPLETED
+}
+
+enum InstallmentScheduleType {
+  DAILY_60
+  DAILY_90_EXTENDED
+}
+
+enum WithdrawalChannel {
+  BANK_OR_MOBILE_MONEY
+  CRYPTO_USDT_USDC
+  P2P_MEMBER_TRANSFER
+  INTERNAL_REPURCHASE_0_FEE
+}
+
+enum LedgerDirection {
+  CREDIT
+  DEBIT
+  TREASURY
+}
+
+model User {
+  id                    String   @id @default(cuid())
+  name                  String
+  email                 String?  @unique
+  phone                 String?  @unique
+  countryCode           String   @default("+234")
+  country               String   @default("Nigeria")
+  passwordHash          String
+  preferredCurrency     CurrencyCode @default(USDT)
+  role                  UserRole @default(MEMBER)
+
+  referralCode          String   @unique
+  usedInvitationCode    String
+  referredById          String?
+  referredBy            User?    @relation("SponsorTree", fields: [referredById], references: [id])
+  directReferrals       User[]   @relation("SponsorTree")
+  materializedPath      String
+  networkLevel          Int      @default(1)
+  directReferralsCount  Int      @default(0)
+  totalTeamMembersCount Int      @default(0)
+  personalVolumeCents   Int      @default(0)
+  teamVolumeCents       Int      @default(0)
+  kycVerified           Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  wallet                UserWallet?
+  sessions              AuthSession[]
+  contracts             InstallmentContract[]
+  flashExchanges        FlashExchangeOrder[]
+  savingsTransactions   SavingsJarTransaction[]
+  withdrawalMethods     WithdrawalMethod[]
+  withdrawals           WithdrawalOrTransferRecord[] @relation("UserWithdrawals")
+  receivedTransfers     WithdrawalOrTransferRecord[] @relation("RecipientTransfers")
+  ledgerLogs            LedgerLog[]
+  articles              Article[]
+  articleLikes          ArticleLike[]
+  articleComments       ArticleComment[]
+  taskCompletions       UserTaskCompletion[]
+  milestones            UserMilestoneProgress[]
+  supportTickets        SupportTicket[]
+  courseEnrollments     UserCourseEnrollment[]
+  offlineSalesBought    OfflineSaleRecord[]
+  adCampaigns           AdCampaign[]
+}
+
+model AuthSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model UserWallet {
+  id                          String   @id @default(cuid())
+  userId                      String   @unique
+  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usdtBalanceCents            Int      @default(0)
+  usdcBalanceCents            Int      @default(0)
+  spwPoints                   Int      @default(0)
+  savingsJarCents             Int      @default(0)
+  escrowCapitalCents          Int      @default(0)
+  totalCapitalReturnedCents   Int      @default(0)
+  totalCommissionsEarnedCents Int      @default(0)
+  totalRoyaltiesEarnedCents   Int      @default(0)
+  adCreditsCents              Int      @default(0)
+  updatedAt                   DateTime @updatedAt
+}
+
+model WithdrawalMethod {
+  id          String            @id @default(cuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel     WithdrawalChannel
+  label       String
+  destination String
+  isDefault   Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+
+  @@index([userId])
+}
+
+model FlashExchangeOrder {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fromAsset       String
+  toAsset         String
+  fromAmountCents Int
+  toAmountCents   Int
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SavingsJarTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  direction   String
+  amountCents Int
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model TradePack {
+  id                          String                  @id
+  name                        String
+  tierBadge                   String
+  isHeroMagnet                Boolean                 @default(false)
+  popularityTag               String?
+  description                 String
+  priceCents                  Int
+  baseDailyPayoutCents        Int
+  boosterDailyPayoutCents     Int                     @default(0)
+  capitalReturnDays           Int
+  activeDailyEarningDays      Int                     @default(60)
+  totalLifecycleDays          Int                     @default(90)
+  daysToHit15DollarWithdrawal Float
+  defaultSchedule             InstallmentScheduleType @default(DAILY_60)
+  allowUserScheduleChoice     Boolean                 @default(true)
+  royaltyUnits                Int                     @default(0)
+  freeAdCreditsCents          Int                     @default(0)
+  xpReward                    Int                     @default(100)
+  contracts                   InstallmentContract[]
+  offlineSales                OfflineSaleRecord[]
+}
+
+model InstallmentContract {
+  id                         String                  @id @default(cuid())
+  userId                     String
+  user                       User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packId                     String
+  pack                       TradePack               @relation(fields: [packId], references: [id])
+  sourceChannel              String                  @default("ONLINE_WALLET")
+  principalCents             Int
+  dailyPayoutCents           Int
+  boosterApplied             Boolean                 @default(false)
+  returnedCapitalCents       Int                     @default(0)
+  dailyProfitEarnedCents     Int                     @default(0)
+  totalDailyCreditedCents    Int                     @default(0)
+  royaltyEarningsCents       Int                     @default(0)
+  royaltyUnits               Int                     @default(0)
+  scheduleType               InstallmentScheduleType @default(DAILY_60)
+  capitalReturnTargetDays    Int
+  totalInstallments          Int                     @default(60)
+  paidInstallments           Int                     @default(0)
+  currentDayElapsed          Int                     @default(0)
+  totalLifecycleDays         Int                     @default(90)
+  phaseStatus                ContractPhaseStatus     @default(PHASE_1_CAPITAL_RECOVERY)
+  isActive                   Boolean                 @default(true)
+  createdAt                  DateTime                @default(now())
+  completedCapitalRecoveryAt DateTime?
+  completed60DayAt           DateTime?
+  installments               InstallmentItem[]
+
+  @@index([userId, packId, isActive])
+}
+
+model InstallmentItem {
+  id                String              @id @default(cuid())
+  contractId        String
+  contract          InstallmentContract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  installmentNumber Int
+  dueDay            Int
+  percentage        Float
+  amountCents       Int
+  status            String              @default("PENDING")
+  paidAt            DateTime?
+
+  @@unique([contractId, installmentNumber])
+}
+
+model Article {
+  id            String           @id @default(cuid())
+  authorId      String
+  author        User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorName    String
+  category      String
+  title         String
+  excerpt       String
+  viewsCount    Int              @default(0)
+  likesCount    Int              @default(0)
+  commentsCount Int              @default(0)
+  createdAt     DateTime         @default(now())
+
+  likes         ArticleLike[]
+  comments      ArticleComment[]
+}
+
+model ArticleLike {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, userId])
+  @@index([userId])
+}
+
+model ArticleComment {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([articleId])
+}
+
+model TaskDefinition {
+  id          String               @id
+  title       String
+  rewardLabel String
+  spwReward   Int                  @default(10)
+  completions UserTaskCompletion[]
+}
+
+model UserTaskCompletion {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId      String
+  task        TaskDefinition @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  completedAt DateTime       @default(now())
+
+  @@unique([userId, taskId])
+}
+
+model UserMilestoneProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stageNumber Int
+  isUnlocked  Boolean   @default(false)
+  unlockedAt  DateTime?
+
+  @@unique([userId, stageNumber])
+}
+
+model SupportFaq {
+  id        String @id @default(cuid())
+  question  String
+  answer    String
+  category  String @default("General")
+  sortOrder Int    @default(0)
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  message   String
+  status    String   @default("OPEN")
+  reply     String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model WithdrawalOrTransferRecord {
+  id                 String            @id @default(cuid())
+  userId             String
+  user               User              @relation("UserWithdrawals", fields: [userId], references: [id], onDelete: Cascade)
+  channel            WithdrawalChannel
+  grossAmountCents   Int
+  platformFeeCents   Int               @default(0)
+  netAmountCents     Int
+  currency           CurrencyCode      @default(USDT)
+  destinationDetails String
+  recipientUserId    String?
+  recipientUser      User?             @relation("RecipientTransfers", fields: [recipientUserId], references: [id])
+  status             String            @default("APPROVED_PAID")
+  createdAt          DateTime          @default(now())
+
+  @@index([userId])
+}
+
+model LedgerLog {
+  id          String          @id @default(cuid())
+  timestamp   DateTime        @default(now())
+  category    String
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amountCents Int
+  direction   LedgerDirection
+  description String
+
+  @@index([userId, timestamp])
+}
+
+model Course {
+  id               String                 @id
+  title            String
+  category         String
+  priceCents       Int                    @default(0)
+  isStandalonePaid Boolean                @default(false)
+  xpReward         Int                    @default(100)
+  instructor       String
+  description      String
+  lessons          CourseLesson[]
+  enrollments      UserCourseEnrollment[]
+}
+
+model CourseLesson {
+  id              String @id
+  courseId        String
+  course          Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title           String
+  durationMinutes Int
+  format          String
+}
+
+model UserCourseEnrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  @@unique([userId, courseId])
+}
+
+model OfflineSaleRecord {
+  id                   String       @id @default(cuid())
+  buyerUserId          String
+  buyer                User         @relation(fields: [buyerUserId], references: [id])
+  packId               String
+  pack                 TradePack    @relation(fields: [packId], references: [id])
+  amountCents          Int
+  localCurrency        CurrencyCode
+  localAmountFormatted String
+  paymentMethod        String
+  receiptReference     String
+  fieldAgentNote       String
+  status               String       @default("PENDING_VERIFICATION")
+  createdAt            DateTime     @default(now())
+}
+
+model BusinessDividendDeclaration {
+  id                         String   @id @default(cuid())
+  title                      String
+  periodType                 String
+  grossBusinessProfitCents   Int
+  declaredMemberPoolCents    Int
+  companyRetainedSpreadCents Int
+  eligibleContractsCount     Int
+  totalWeightedUnits         Int
+  declaredByUserId           String
+  createdAt                  DateTime @default(now())
+}
+
+model AdCampaign {
+  id             String   @id @default(cuid())
+  promoterUserId String
+  promoter       User     @relation(fields: [promoterUserId], references: [id])
+  title          String
+  category       String
+  targetRegion   String
+  ctaUrl         String
+  budgetCents    Int
+  impressions    Int      @default(0)
+  clicks         Int      @default(0)
+  status         String   @default("ACTIVE")
+  createdAt      DateTime @default(now())
+}
+
+model FounderTreasury {
+  id                                 String @id @default("singleton")
+  withdrawalAndP2PFeesCents          Int    @default(0)
+  sponsoredAdsRevenueCents           Int    @default(0)
+  standaloneCourseRevenueCents       Int    @default(0)
+  retainedBusinessSpreadCents        Int    @default(0)
+  totalFounderRevenueCents           Int    @default(0)
+  activeWorkingCapitalDeployedCents  Int    @default(0)
+  totalCapitalReturnedToMembersCents Int    @default(0)
+  totalRoyaltiesPaidToMembersCents   Int    @default(0)
+}
+
+model MarketRateTick {
+  id        String   @id @default(cuid())
+  pair      String
+  price     Float
+  volume    Float    @default(0)
+  eventNote String?
+  createdAt DateTime @default(now())
+
+  @@index([pair, createdAt])
+}
